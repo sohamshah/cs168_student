@@ -10,7 +10,6 @@ Start it up with a commandline like...
 import sim.api as api
 import sim.basics as basics
 
-
 class LearningSwitch(api.Entity):
     """
     A learning switch.
@@ -22,7 +21,6 @@ class LearningSwitch(api.Entity):
     someone would invent a helpful poem for solving that problem...
 
     """
-
     def __init__(self):
         """
         Do some initialization.
@@ -30,7 +28,7 @@ class LearningSwitch(api.Entity):
         You probablty want to do something in this method.
 
         """
-        pass
+        self.routing_table = {}
 
     def handle_link_down(self, port):
         """
@@ -51,16 +49,21 @@ class LearningSwitch(api.Entity):
         or flooding them.
 
         """
+        self.log("Current time is %s", api.current_time())
 
         # The source of the packet can obviously be reached via the input port, so
         # we should "learn" that the source host is out that port.  If we later see
         # a packet with that host as the *destination*, we know where to send it!
         # But it's up to you to implement that.  For now, we just implement a
         # simple hub.
-
+        self.routing_table[packet.src] = in_port
         if isinstance(packet, basics.HostDiscoveryPacket):
             # Don't forward discovery messages
             return
 
-        # Flood out all ports except the input port
-        self.send(packet, in_port, flood=True)
+        if packet.dst in self.routing_table.keys():
+            out_port = self.routing_table[packet.dst]
+            self.send(packet, out_port, flood = False)
+        else:
+            # Flood out all ports except the input port
+            self.send(packet, in_port, flood=True)

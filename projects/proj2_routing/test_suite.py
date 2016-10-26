@@ -25,11 +25,23 @@ def main():
     t.test('dv_router', 'tests.test_no_hairpin')
     t.test('dv_router', 'tests.test_link_weights')
     t.test('dv_router', 'tests.test_expire_routes')
+    t.test('dv_router', 'tests.test_fun')
+    t.test('dv_router', 'tests.test_basics_intensely')
+    t.test('dv_router', 'tests.test_low_cost_late')
     t.test(
         'dv_router',
         'tests.test_route_poisoning',
         extra_args=['--poison-mode'])
-
+    t.test(
+        'dv_router',
+        'tests.test_poison2',
+        extra_args=['--poison-mode'])
+    t.test(
+        'dv_router',
+        'tests.test_custom_poison_link_down',
+        extra_args=['--poison-mode'])
+    t.test('dv_router', 'tests.test_custom_poison_link_down')
+    t.test('dv_router', 'tests.test_split_horizon')
     # Add your own tests here.
 
     t.finish()
